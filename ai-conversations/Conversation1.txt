@@ -1,1 +1,199 @@
+AI Conversations
+
+Tool : ChatGpt
+Date : 15/10/2025
+
+Me : Give me a function or multiple functions which does the following
+   1) Retrieve weather data for user-specified locations using wttr.in api
+   2) Display current conditions and forecasts for up to 3 days
+   3) Include multiple data visualisations like temperature trends, precipitation chances.
+
+AI : Here are functions to achieve your requirements using the requests and matplotlib libraries. These functions:
+
+Retrieve weather data from the wttr.in API.
+Display current conditions and a 3-day forecast.
+Visualize temperature trends and precipitation chances.
+
+import requests
+import matplotlib.pyplot as plt
+
+def get_weather_data(location):
+    """Retrieve weather data from wttr.in for a given location."""
+    url = f"https://wttr.in/{location}?format=j1"
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.json()
+
+def display_current_conditions(weather_data, location):
+    """Display current weather conditions."""
+    current = weather_data['current_condition'][0]
+    print(f"\nCurrent conditions for {location}:")
+    print(f"  Temperature: {current['temp_C']}°C")
+    print(f"  Feels Like: {current['FeelsLikeC']}°C")
+    print(f"  Weather: {current['weatherDesc'][0]['value']}")
+    print(f"  Humidity: {current['humidity']}%")
+    print(f"  Precipitation: {current['precipMM']} mm")
+
+def display_forecast(weather_data, location):
+    """Display 3-day weather forecast."""
+    print(f"\n3-Day Forecast for {location}:")
+    for day in weather_data['weather'][:3]:
+        date = day['date']
+        avg_temp = day['avgtempC']
+        chance_of_rain = day['hourly'][0]['chanceofrain']
+        print(f"  {date}: Avg Temp {avg_temp}°C, Chance of Rain {chance_of_rain}%")
+
+def plot_temperature_trend(weather_data, location):
+    """Plot temperature trend for the next 3 days."""
+    dates = []
+    temps = []
+    for day in weather_data['weather'][:3]:
+        dates.append(day['date'])
+        temps.append(int(day['avgtempC']))
+    plt.figure(figsize=(6,4))
+    plt.plot(dates, temps, marker='o', label='Avg Temp (°C)')
+    plt.title(f"Temperature Trend for {location}")
+    plt.xlabel("Date")
+    plt.ylabel("Temperature (°C)")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+def plot_precipitation_chances(weather_data, location):
+    """Plot precipitation chances for the next 3 days."""
+    dates = []
+    chances = []
+    for day in weather_data['weather'][:3]:
+        dates.append(day['date'])
+        # Take average chance of rain across all hours
+        hourly = day['hourly']
+        avg_chance = sum(int(h['chanceofrain']) for h in hourly) / len(hourly)
+        chances.append(avg_chance)
+    plt.figure(figsize=(6,4))
+    plt.bar(dates, chances, color='skyblue')
+    plt.title(f"Precipitation Chances for {location}")
+    plt.xlabel("Date")
+    plt.ylabel("Chance of Rain (%)")
+    plt.ylim(0, 100)
+    plt.show()
+
+def weather_report(locations):
+    """Main function to retrieve, display, and visualize weather data for multiple locations."""
+    for location in locations:
+        weather_data = get_weather_data(location)
+        display_current_conditions(weather_data, location)
+        display_forecast(weather_data, location)
+        plot_temperature_trend(weather_data, location)
+        plot_precipitation_chances(weather_data, location)
+
+
+locations = ["London", "New York", "Delhi"]
+weather_report(locations)
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+Tool : ChatGpt
+Date : 15/10/2025
+
+ Me : 
+
+This is taking a list of locations, but i would like to have a location chosen by the user and I want to have information,     visualisation as a user input as well and even in the visualisation user should be able to choose what kind of visualisation he needs.
+
+
+AI :
+
+You can make your script interactive by using input() to let the user choose:
+
+The location.
+What information to display (current, forecast).
+Which visualisation to show (temperature trend, precipitation chances, or both).
+Here’s how you can modify your script:
+
+import requests
+import matplotlib.pyplot as plt
+
+def get_weather_data(location):
+    url = f"https://wttr.in/{location}?format=j1"
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.json()
+
+def display_current_conditions(weather_data, location):
+    current = weather_data['current_condition'][0]
+    print(f"\nCurrent conditions for {location}:")
+    print(f"  Temperature: {current['temp_C']}°C")
+    print(f"  Feels Like: {current['FeelsLikeC']}°C")
+    print(f"  Weather: {current['weatherDesc'][0]['value']}")
+    print(f"  Humidity: {current['humidity']}%")
+    print(f"  Precipitation: {current['precipMM']} mm")
+
+def display_forecast(weather_data, location):
+    print(f"\n3-Day Forecast for {location}:")
+    for day in weather_data['weather'][:3]:
+        date = day['date']
+        avg_temp = day['avgtempC']
+        chance_of_rain = day['hourly'][0]['chanceofrain']
+        print(f"  {date}: Avg Temp {avg_temp}°C, Chance of Rain {chance_of_rain}%")
+
+def plot_temperature_trend(weather_data, location):
+    dates = []
+    temps = []
+    for day in weather_data['weather'][:3]:
+        dates.append(day['date'])
+        temps.append(int(day['avgtempC']))
+    plt.figure(figsize=(6,4))
+    plt.plot(dates, temps, marker='o', label='Avg Temp (°C)')
+    plt.title(f"Temperature Trend for {location}")
+    plt.xlabel("Date")
+    plt.ylabel("Temperature (°C)")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+def plot_precipitation_chances(weather_data, location):
+    dates = []
+    chances = []
+    for day in weather_data['weather'][:3]:
+        dates.append(day['date'])
+        hourly = day['hourly']
+        avg_chance = sum(int(h['chanceofrain']) for h in hourly) / len(hourly)
+        chances.append(avg_chance)
+    plt.figure(figsize=(6,4))
+    plt.bar(dates, chances, color='skyblue')
+    plt.title(f"Precipitation Chances for {location}")
+    plt.xlabel("Date")
+    plt.ylabel("Chance of Rain (%)")
+    plt.ylim(0, 100)
+    plt.show()
+
+def weather_report():
+    location = input("Enter location: ")
+    weather_data = get_weather_data(location)
+
+    print("\nChoose information to display:")
+    print("1. Current conditions")
+    print("2. 3-day forecast")
+    info_choice = input("Enter 1, 2, or both separated by comma (e.g., 1,2): ")
+
+    if '1' in info_choice:
+        display_current_conditions(weather_data, location)
+    if '2' in info_choice:
+        display_forecast(weather_data, location)
+
+    print("\nChoose visualisation:")
+    print("1. Temperature trend")
+    print("2. Precipitation chances")
+    print("3. Both")
+    vis_choice = input("Enter 1, 2, or 3: ")
+
+    if vis_choice == '1':
+        plot_temperature_trend(weather_data, location)
+    elif vis_choice == '2':
+        plot_precipitation_chances(weather_data, location)
+    elif vis_choice == '3':
+        plot_temperature_trend(weather_data, location)
+        plot_precipitation_chances(weather_data, location)
+
+if __name__ == "__main__":
+    weather_report()
 
