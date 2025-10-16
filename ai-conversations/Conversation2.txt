@@ -1,0 +1,255 @@
+
+Tool : ChatGpt
+Date : 16/10/2025
+
+
+Install Ollama and run the command
+   "ollama run llama3.2" in command prompt
+
+Me :
+------
+
+Here I need to use locally run llama to understand the question the user gives, 
+which should consist of the attributes location, time period, and weather attribute and 
+get the relevant information from the function get_weather_data and then use llama 
+again to give a naturally sounding appropriate response, give the appropriate and modified code 
+
+AI Response :
+---------------
+
+
+import requests
+import matplotlib.pyplot as plt
+import json
+
+def get_weather_data(location):
+    url = f"https://wttr.in/{location}?format=j1"
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.json()
+
+def llama_parse_question(question):
+    """
+    Send the question to a locally running Llama model to extract location, time period, and weather attribute.
+    Assumes Llama API at http://localhost:8000/completion returning JSON with 'text' field containing a JSON string.
+    """
+    prompt = (
+        "Extract the location, time period (e.g., today, tomorrow, next 3 days), "
+        "and weather attribute (e.g., temperature, precipitation, humidity) from this question. "
+        "Return as a JSON object with keys: location, time_period, attribute.\n"
+        f"Question: {question}\n"
+        "JSON:"
+    )
+    response = requests.post(
+        "http://localhost:8000/completion",
+        json={"prompt": prompt, "max_tokens": 100}
+    )
+    return response.json()["text"]
+
+def llama_generate_response(weather_info, question):
+    """
+    Send the weather info and original question to Llama for a natural response.
+    """
+    prompt = (
+        f"Based on the following weather information:\n{weather_info}\n"
+        f"Answer the user's question naturally:\n{question}\n"
+        "Response:"
+    )
+    response = requests.post(
+        "http://localhost:8000/completion",
+        json={"prompt": prompt, "max_tokens": 150}
+    )
+    return response.json()["text"]
+
+def extract_info(parsed_json, weather_data):
+    """
+    Extract relevant info from weather_data based on parsed_json.
+    """
+    info = json.loads(parsed_json)
+    location = info.get("location", "")
+    time_period = info.get("time_period", "today")
+    attribute = info.get("attribute", "temperature")
+
+    result = f"Weather for {location}, {time_period}:\n"
+    if time_period.lower() in ["today", "current"]:
+        current = weather_data['current_condition'][0]
+        if attribute == "temperature":
+            result += f"Temperature: {current['temp_C']}°C\n"
+        elif attribute == "precipitation":
+            result += f"Precipitation: {current['precipMM']} mm\n"
+        elif attribute == "humidity":
+            result += f"Humidity: {current['humidity']}%\n"
+        else:
+            result += f"{attribute.capitalize()}: {current.get(attribute, 'N/A')}\n"
+    else:
+        # For forecast, show up to 3 days
+        for day in weather_data['weather'][:3]:
+            date = day['date']
+            if attribute == "temperature":
+                result += f"{date}: Avg Temp {day['avgtempC']}°C\n"
+            elif attribute == "precipitation":
+                hourly = day['hourly']
+                avg_precip = sum(float(h['precipMM']) for h in hourly) / len(hourly)
+                result += f"{date}: Avg Precipitation {avg_precip:.2f} mm\n"
+            elif attribute == "humidity":
+                hourly = day['hourly']
+                avg_humidity = sum(int(h['humidity']) for h in hourly) / len(hourly)
+                result += f"{date}: Avg Humidity {avg_humidity:.1f}%\n"
+            else:
+                result += f"{date}: {attribute.capitalize()} N/A\n"
+    return result
+
+def display_current_conditions(weather_data, location):
+    current = weather_data['current_condition'][0]
+    print(f"\nCurrent conditions for {location}:")
+    print(f"  Temperature: {current['temp_C']}°C")
+    print(f"  Feels Like: {current['FeelsLikeC']}°C")
+    print(f"  Weather: {current['weatherDesc'][0]['value']}")
+    print(f"  Humidity: {current['humidity']}%")
+    print(f"  Precipitation: {current['precipMM']} mm")
+
+def display_forecast(weather_data, location):
+    print(f"\n3-Day Forecast for {location}:")
+    for day in weather_data['weather'][:3]:
+        date = day['date']
+        avg_temp = day['avgtempC']
+        chance_of_rain = day['hourly'][0]['chanceofrain']
+        print(f"  {date}: Avg Temp {avg_temp}°C, Chance of Rain {chance_of_rain}%")
+
+def plot_temperature_trend(weather_data, location):
+    dates = []
+    temps = []
+    for day in weather_data['weather'][:3]:
+        dates.append(day['date'])
+        temps.append(int(day['avgtempC']))
+    plt.figure(figsize=(6,4))
+    plt.plot(dates, temps, marker='o', label='Avg Temp (°C)')
+    plt.title(f"Temperature Trend for {location}")
+    plt.xlabel("Date")
+    plt.ylabel("Temperature (°C)")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+def plot_precipitation_chances(weather_data, location):
+    dates = []
+    chances = []
+    for day in weather_data['weather'][:3]:
+        dates.append(day['date'])
+        hourly = day['hourly']
+        avg_chance = sum(int(h['chanceofrain']) for h in hourly) / len(hourly)
+        chances.append(avg_chance)
+    plt.figure(figsize=(6,4))
+    plt.bar(dates, chances, color='skyblue')
+    plt.title(f"Precipitation Chances for {location}")
+    plt.xlabel("Date")
+    plt.ylabel("Chance of Rain (%)")
+    plt.ylim(0, 100)
+    plt.show()
+
+def main():
+    print("Choose mode:")
+    print("1. Ask a natural language weather question")
+    print("2. Use interactive menu")
+    mode = input("Enter 1 or 2: ")
+
+    if mode == '1':
+        question = input("Ask your weather question: ")
+        parsed_json = llama_parse_question(question)
+        try:
+            location = json.loads(parsed_json).get("location", "")
+        except Exception:
+            print("Could not parse Llama response.")
+            return
+        if not location:
+            print("Could not determine location from your question.")
+            return
+        weather_data = get_weather_data(location)
+        weather_info = extract_info(parsed_json, weather_data)
+        response = llama_generate_response(weather_info, question)
+        print("\n" + response)
+
+        # Optional: Ask if user wants to see visualisation
+        print("\nWould you like to see a visualisation?")
+        print("0. None")
+        print("1. Temperature trend")
+        print("2. Precipitation chances")
+        print("3. Both")
+        vis_choice = input("Enter 0, 1, 2, or 3: ")
+        if vis_choice == '1':
+            plot_temperature_trend(weather_data, location)
+        elif vis_choice == '2':
+            plot_precipitation_chances(weather_data, location)
+        elif vis_choice == '3':
+            plot_temperature_trend(weather_data, location)
+            plot_precipitation_chances(weather_data, location)
+        # If vis_choice == '0', do nothing
+
+    else:
+        location = input("Enter location: ")
+        weather_data = get_weather_data(location)
+
+        print("\nChoose information to display:")
+        print("1. Current conditions")
+        print("2. 3-day forecast")
+        info_choice = input("Enter 1, 2, or both separated by comma (e.g., 1,2): ")
+
+        if '1' in info_choice:
+            display_current_conditions(weather_data, location)
+        if '2' in info_choice:
+            display_forecast(weather_data, location)
+
+        print("\nChoose visualisation:")
+        print("0. None")
+        print("1. Temperature trend")
+        print("2. Precipitation chances")
+        print("3. Both")
+        vis_choice = input("Enter 0, 1, 2, or 3: ")
+
+        if vis_choice == '1':
+            plot_temperature_trend(weather_data, location)
+        elif vis_choice == '2':
+            plot_precipitation_chances(weather_data, location)
+        elif vis_choice == '3':
+            plot_temperature_trend(weather_data, location)
+            plot_precipitation_chances(weather_data, location)
+        # If vis_choice == '0', do nothing
+
+if __name__ == "__main__":
+    main()
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+
+Me : 
+-----
+when I type ollama serve i am getting error as 
+Error: listen tcp 127.0.0.1:11434: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+
+
+AI Response :
+--------------
+✅ How to Fix It
+Option 1 — Verify if Ollama is already running
+
+Open a new terminal and run:
+
+tasklist | find "ollama"
+
+
+If you see a process like:
+
+ollama.exe
+
+
+then it’s already running! 🎉
+➡️ You don’t need to start it again — just open a new terminal and run:
+
+ollama list
+
+
+If you see a list of models (like llama3.2), Ollama is active and ready to use.
+
+Now you can directly run your script:
+
+python weather_advisor.py
