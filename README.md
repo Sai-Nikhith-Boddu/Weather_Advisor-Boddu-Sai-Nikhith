@@ -1,4 +1,5 @@
-# 🌦️ Weather Advisor  
+# 🌦️ Weather Advisor
+
 An AI-powered weather assistant that combines real-time weather data with conversational AI to provide human-like weather insights.  
 Users can ask natural questions such as *“Do I need an umbrella today in Sydney?”* or *“Is it cold tomorrow in Perth?”*, and the system responds naturally with forecasts and advice.  
 This project demonstrates intentional AI prompting, data visualisation, and full-stack integration.
@@ -6,21 +7,23 @@ This project demonstrates intentional AI prompting, data visualisation, and full
 ---
 
 ## 🌤️ Features
+
 - 🤖 **AI Chatbot** — answers user questions using **Ollama’s LLaMA3** model.  
 - ☁️ **Live Weather Data** — sourced from the free [wttr.in](https://wttr.in) API.  
 - 📊 **Visual Dashboard** — temperature, humidity, and precipitation charts using **Chart.js**.  
 - 💬 **Conversational Interface** — logs previous chat history.  
 - 🔒 **Error-Handling** — gracefully manages API or network failures.  
-- 🧠 **AI Documentation** — all AI prompts and reflections are saved in the `ai-conversations/` folder.  
+- 🧠 **AI Documentation** — all AI prompts and reflections are saved in the `ai-conversations/` folder.
 
 ---
 
 ## 🧰 Tech Stack
+
 | Component | Technology |
 |------------|-------------|
 | **Backend** | Flask (Python) |
 | **Frontend** | HTML, CSS, JavaScript |
-| **AI Model** | Ollama LLaMA3 |
+| **AI Model** | Ollama (LLaMA3) |
 | **Weather Data** | wttr.in API |
 | **Visualisation** | Chart.js |
 | **Version Control** | Git & GitHub |
@@ -33,13 +36,9 @@ This project demonstrates intentional AI prompting, data visualisation, and full
 ```bash
 git clone https://github.com/Sai-Nikhith-Boddu/Weather_Advisor-Boddu-Sai-Nikhith.git
 cd Weather_Advisor-Boddu-Sai-Nikhith
-
 pip install -r requirements.txt
-
 ollama pull llama3
-
 flask run
-
 Weather_Advisor/
 │
 ├── ai-conversations/             # AI prompting documentation (5 logs + summary)
@@ -48,26 +47,71 @@ Weather_Advisor/
 │   ├── Conversation3.txt
 │   ├── Conversation4.txt
 │   ├── Conversation5.txt
-│  
+│   
 │
 ├── static/                       # CSS, JS, and image files
 ├── templates/                    # HTML templates for Flask views
-├── weather_data.py                # Fetches and structures weather data
-├── weather_advisor.py             # Main Flask application and AI integration
-├── requirements.txt               # Python dependencies
-├── submission/                    # Reflection and submission checklist
-└── README.md                      # Project documentation (this file)
+├── weather_data.py               # Fetches and structures weather data
+├── weather_advisor.py            # Main Flask application and AI integration
+├── requirements.txt              # Python dependencies
+├── submission/                   # Reflection and submission checklist
+└── README.md                     # Project documentation (this file)
 
+## 🤖 AI Conversations & Prompting Log
 
----
+This project was developed following intentional prompting principles.
+All AI interactions are documented inside the ai-conversations/
+ folder.
 
-✅ **What to do next:**
-1. Go to your GitHub repository root.  
-2. Create (or open) the file **`README.md`**.  
-3. Paste everything above exactly as is.  
-4. Commit and push.
+Each file includes:
 
-That’s your **final, professional README** — it includes all seven sections required for the project rubric, matches Michael Borck’s Weatherwise structure, and documents your AI usage perfectly.  
+The prompt provided to the AI model
 
-Would you like me to generate the **short 150-word reflection paragraph** to paste into your `submission/reflection.md` next?
+The AI-generated code or explanation
 
+The before-and-after implementation changes
+
+A short reflection describing what was learned
+
+These logs show transparency, accountability, and responsible AI usage — fully aligned with the Weatherwise Template
+
+## 🧾 Submission & Reflection
+
+A comprehensive reflection on the development journey is included in the submission/
+ folder.
+This document outlines:
+
+The role of AI tools in coding, debugging, and design
+
+Key challenges faced and how they were resolved
+
+Insights gained from using AI ethically and effectively in software development
+...
+## 🪪 License & Acknowledgements
+
+Developed by Sai-Nikhith Boddu as part of the Weatherwise project coursework.
+
+Acknowledgements
+
+Flask
+ — backend web framework
+
+Ollama
+ — local AI model runtime (LLaMA3)
+
+wttr.in
+ — weather data provider
+
+Chart.js
+ — data visualisation library
+
+Michael Borck’s Weatherwise Template
+ — structural and academic reference
+
+...
+## 📬 Contact
+
+For feedback or contributions, open an issue or reach out via GitHub:
+Sai-Nikhith Boddu
+
+...
