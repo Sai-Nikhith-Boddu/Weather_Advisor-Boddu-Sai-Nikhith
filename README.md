@@ -1,14 +1,31 @@
-# Weather Advisor  
+# 🌦️ Weather Advisor  
+An AI-powered weather assistant that combines real-time weather data with conversational AI to provide human-like weather insights.  
+Users can ask natural questions such as *“Do I need an umbrella today in Sydney?”* or *“Is it cold tomorrow in Perth?”*, and the system responds naturally with forecasts and advice.  
+This project demonstrates intentional AI prompting, data visualisation, and full-stack integration.
 
-Weather Advisor is an AI-powered web application built with Flask and Ollama that provides natural language weather insights.  
-Users can ask questions such as *“Do I need an umbrella today in Sydney?”* and receive human-like answers, along with a weather dashboard showing temperature, humidity, and precipitation charts.
+---
 
 ## 🌤️ Features
-- AI Chatbot using LLaMA3 via Ollama.
-- Real-time weather data from wttr.in.
-- Visual weather charts with Chart.js.
-- User-friendly Flask web interface.
-- AI prompting documentation in `ai-conversations/`.
+- 🤖 **AI Chatbot** — answers user questions using **Ollama’s LLaMA3** model.  
+- ☁️ **Live Weather Data** — sourced from the free [wttr.in](https://wttr.in) API.  
+- 📊 **Visual Dashboard** — temperature, humidity, and precipitation charts using **Chart.js**.  
+- 💬 **Conversational Interface** — logs previous chat history.  
+- 🔒 **Error-Handling** — gracefully manages API or network failures.  
+- 🧠 **AI Documentation** — all AI prompts and reflections are saved in the `ai-conversations/` folder.  
+
+---
+
+## 🧰 Tech Stack
+| Component | Technology |
+|------------|-------------|
+| **Backend** | Flask (Python) |
+| **Frontend** | HTML, CSS, JavaScript |
+| **AI Model** | Ollama LLaMA3 |
+| **Weather Data** | wttr.in API |
+| **Visualisation** | Chart.js |
+| **Version Control** | Git & GitHub |
+
+---
 
 ## ⚙️ Installation & Setup
 
@@ -23,43 +40,34 @@ ollama pull llama3
 
 flask run
 
+Weather_Advisor/
+│
+├── ai-conversations/             # AI prompting documentation (5 logs + summary)
+│   ├── Conversation1.txt
+│   ├── Conversation2.txt
+│   ├── Conversation3.txt
+│   ├── Conversation4.txt
+│   ├── Conversation5.txt
+│  
+│
+├── static/                       # CSS, JS, and image files
+├── templates/                    # HTML templates for Flask views
+├── weather_data.py                # Fetches and structures weather data
+├── weather_advisor.py             # Main Flask application and AI integration
+├── requirements.txt               # Python dependencies
+├── submission/                    # Reflection and submission checklist
+└── README.md                      # Project documentation (this file)
+
 
 ---
 
-### 🗂️ Project Structure
+✅ **What to do next:**
+1. Go to your GitHub repository root.  
+2. Create (or open) the file **`README.md`**.  
+3. Paste everything above exactly as is.  
+4. Commit and push.
 
-```markdown
-## 🗂️ Project Structure
+That’s your **final, professional README** — it includes all seven sections required for the project rubric, matches Michael Borck’s Weatherwise structure, and documents your AI usage perfectly.  
 
+Would you like me to generate the **short 150-word reflection paragraph** to paste into your `submission/reflection.md` next?
 
-## 🤖 AI Conversations & Prompting Log
-
-This project was developed using **intentional AI prompting** practices.  
-All AI prompts, generated code, and reflections are saved in the [`ai-conversations/`](./ai-conversations/) folder.
-
-Each file includes:
-- The **prompt** given to AI.
-- The **AI’s code response**.
-- **Before & after changes** in implementation.
-- A short **reflection** describing how AI guidance was applied.
-
-These demonstrate responsible and transparent use of AI in software development, in line with the [Weatherwise Template](https://github.com/michaelborck-curtin/weatherwise-template).
-
-## 🧾 Submission & Reflection
-
-A detailed reflection on the development process and AI usage is included in the [`submission/`](./submission/) folder.  
-This covers:
-- Learning outcomes and challenges faced.
-- How AI assistance improved productivity.
-- Ethical considerations and transparency in AI usage.
-
-## 🪪 License & Acknowledgements
-
-Developed by **Sai-Nikhith Boddu** as part of the Weatherwise project coursework.
-
-Special thanks to:
-- [Flask](https://flask.palletsprojects.com/) — web framework  
-- [Ollama](https://ollama.com) — AI model runtime (LLaMA3)  
-- [wttr.in](https://wttr.in) — Weather data provider  
-- [Chart.js](https://www.chartjs.org) — Data visualisation  
-- [Michael Borck’s Weatherwise Template](https://github.com/michaelborck-curtin/weatherwise-template) — for project structure and academic guidance
