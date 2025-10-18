@@ -59,59 +59,43 @@ Weather_Advisor/
 
 ## 🤖 AI Conversations & Prompting Log
 
-This project was developed following intentional prompting principles.
-All AI interactions are documented inside the ai-conversations/
- folder.
+This project was developed following **intentional prompting** principles.  
+All AI interactions are documented inside the [`ai-conversations/`](./ai-conversations/) folder.
 
 Each file includes:
+- The **prompt** provided to the AI model  
+- The **AI-generated code or explanation**  
+- The **before-and-after implementation** changes  
+- A short **reflection** describing what was learned  
 
-The prompt provided to the AI model
+These logs show transparency, accountability, and responsible AI usage — fully aligned with the [Weatherwise Template](https://github.com/michaelborck-curtin/weatherwise-template).
 
-The AI-generated code or explanation
-
-The before-and-after implementation changes
-
-A short reflection describing what was learned
-
-These logs show transparency, accountability, and responsible AI usage — fully aligned with the Weatherwise Template
+---
 
 ## 🧾 Submission & Reflection
 
-A comprehensive reflection on the development journey is included in the submission/
- folder.
+A comprehensive reflection on the development journey is included in the [`submission/`](./submission/) folder.  
 This document outlines:
+- The **role of AI tools** in coding, debugging, and design  
+- **Key challenges** faced and how they were resolved  
+- **Insights gained** from using AI ethically and effectively in software development  
 
-The role of AI tools in coding, debugging, and design
+---
 
-Key challenges faced and how they were resolved
-
-Insights gained from using AI ethically and effectively in software development
-...
 ## 🪪 License & Acknowledgements
 
-Developed by Sai-Nikhith Boddu as part of the Weatherwise project coursework.
+Developed by **Sai-Nikhith Boddu** as part of the Weatherwise project coursework.
 
-Acknowledgements
+**Acknowledgements**
+- [Flask](https://flask.palletsprojects.com/) — backend web framework  
+- [Ollama](https://ollama.com) — local AI model runtime (LLaMA3)  
+- [wttr.in](https://wttr.in) — weather data provider  
+- [Chart.js](https://www.chartjs.org) — data visualisation library  
+- [Michael Borck’s Weatherwise Template](https://github.com/michaelborck-curtin/weatherwise-template) — structural and academic reference  
 
-Flask
- — backend web framework
+---
 
-Ollama
- — local AI model runtime (LLaMA3)
-
-wttr.in
- — weather data provider
-
-Chart.js
- — data visualisation library
-
-Michael Borck’s Weatherwise Template
- — structural and academic reference
-
-...
 ## 📬 Contact
 
-For feedback or contributions, open an issue or reach out via GitHub:
-Sai-Nikhith Boddu
-
-...
+For feedback or contributions, open an issue or reach out via GitHub:  
+**[Sai-Nikhith Boddu](https://github.com/Sai-Nikhith-Boddu)**  
