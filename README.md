@@ -36,9 +36,22 @@ This project demonstrates intentional AI prompting, data visualisation, and full
 ```bash
 git clone https://github.com/Sai-Nikhith-Boddu/Weather_Advisor-Boddu-Sai-Nikhith.git
 cd Weather_Advisor-Boddu-Sai-Nikhith
+
+2️⃣ Install Dependencies
 pip install -r requirements.txt
+
+3️⃣ Configure AI and Weather API
 ollama pull llama3
+Make sure Ollama
+ is installed on your system.
+The app uses the free wttr.in API for real-time weather — no API key is required.
+
+4️⃣ Run the Application
 flask run
+Then open your browser and go to:
+👉 http://localhost:5000
+
+🗂️ Project Structure
 Weather_Advisor/
 │
 ├── ai-conversations/             # AI prompting documentation (5 logs + summary)
@@ -57,45 +70,79 @@ Weather_Advisor/
 ├── submission/                   # Reflection and submission checklist
 └── README.md                     # Project documentation (this file)
 
-## 🤖 AI Conversations & Prompting Log
+🤖 AI Conversations & Prompting Log
 
-This project was developed following **intentional prompting** principles.  
-All AI interactions are documented inside the [`ai-conversations/`](./ai-conversations/) folder.
+This project was developed following intentional prompting principles.
+All AI interactions are documented inside the ai-conversations/
+ folder.
 
 Each file includes:
-- The **prompt** provided to the AI model  
-- The **AI-generated code or explanation**  
-- The **before-and-after implementation** changes  
-- A short **reflection** describing what was learned  
 
-These logs show transparency, accountability, and responsible AI usage — fully aligned with the [Weatherwise Template](https://github.com/michaelborck-curtin/weatherwise-template).
+The prompt provided to the AI model
 
----
+The AI-generated code or explanation
 
-## 🧾 Submission & Reflection
+The before-and-after implementation changes
 
-A comprehensive reflection on the development journey is included in the [`submission/`](./submission/) folder.  
+A short reflection describing what was learned
+
+These logs show transparency, accountability, and responsible AI usage — fully aligned with the Weatherwise Template
+
+
+🧾 Submission & Reflection
+
+A comprehensive reflection on the development journey is included in the submission/
+ folder.
 This document outlines:
-- The **role of AI tools** in coding, debugging, and design  
-- **Key challenges** faced and how they were resolved  
-- **Insights gained** from using AI ethically and effectively in software development  
 
----
+The role of AI tools in coding, debugging, and design
 
-## 🪪 License & Acknowledgements
+Key challenges faced and how they were resolved
 
-Developed by **Sai-Nikhith Boddu** as part of the Weatherwise project coursework.
+Insights gained from using AI ethically and effectively in software development
 
-**Acknowledgements**
-- [Flask](https://flask.palletsprojects.com/) — backend web framework  
-- [Ollama](https://ollama.com) — local AI model runtime (LLaMA3)  
-- [wttr.in](https://wttr.in) — weather data provider  
-- [Chart.js](https://www.chartjs.org) — data visualisation library  
-- [Michael Borck’s Weatherwise Template](https://github.com/michaelborck-curtin/weatherwise-template) — structural and academic reference  
+🪪 License & Acknowledgements
 
----
+Developed by Sai-Nikhith Boddu as part of the Weatherwise project coursework.
+
+Acknowledgements
+
+Flask
+ — backend web framework
+
+Ollama
+ — local AI model runtime (LLaMA3)
+
+wttr.in
+ — weather data provider
+
+Chart.js
+ — data visualisation library
+
+Michael Borck’s Weatherwise Template
+ — structural and academic reference
 
 ## 📬 Contact
 
 For feedback or contributions, open an issue or reach out via GitHub:  
-**[Sai-Nikhith Boddu](https://github.com/Sai-Nikhith-Boddu)**  
+**[Sai-Nikhith Boddu](https://github.com/Sai-Nikhith-Boddu)**
+
+
+---
+
+### ✅ Notes to make it render perfectly
+1. **Blank line before every ```bash and after every ```**.  
+   - If even one is missing, GitHub treats the rest of your text as part of the code block.  
+2. Keep the `## ⚙️ Installation & Setup` heading on its own line, with one empty line below it.  
+3. Make sure there’s **no extra indentation** (no spaces before ```bash).  
+
+---
+
+To verify:
+1. Paste this section into your README.  
+2. Click **Preview** in GitHub’s editor — you should now see each step in its own neat grey box.  
+
+---
+
+Would you like me to resend your **entire README.md** with these fixed blank lines included everywhere (so everything renders 100 % correctly on GitHub)?
+
