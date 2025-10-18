@@ -1,0 +1,655 @@
+AI-Conversations
+------------------
+
+Tool :- ChatGPT
+Date :- 18-10-2025
+
+Me :
+----
+
+Modify the above code such that, I need a normal humanised resposne whenever user types a question 
+like if user asks the question "Do i need a raincoat today at hyderabad" , it should give response as 
+""yes please take an u,mberella" ( use this example as areference) . 
+1) Here there should be no mannual input and user can type any location and use ollama3 for generating humanise responsse and also 
+2)provide web-based (HTML dashboard + chatbot) where I can type the question on a webpage instead of the terminal
+
+
+AI - Response :
+----------------
+
+Perfect 🌦️ — we’ll now turn your Ollama-powered weather assistant into a beautiful interactive web dashboard with:
+
+✅ A chatbot-style interface where users can type weather-related questions
+✅ A visual weather summary panel (temperature, rain, humidity, etc.)
+✅ Real-time responses generated using Ollama 3
+✅ Optional plots (temperature & precipitation) that you can add later
+
+🧱 Tech Stack
+
+Backend: Flask (Python)
+
+Frontend: HTML + CSS + JavaScript
+
+AI Engine: Ollama 3 (local model)
+
+Weather API: wttr.in
+ (free and simple)
+
+📁 Folder Structure
+weather_dashboard/
+│
+├── app.py                 # Flask backend
+├── templates/
+│   └── index.html         # Chatbot UI
+├── static/
+│   ├── style.css          # UI styles
+│   └── script.js          # Frontend logic
+
+⚙️ Step 1: app.py (Backend with Ollama + Flask)
+
+Save this file in your project folder:
+
+from flask import Flask, render_template, request, jsonify
+import requests
+import json
+import ollama
+import re
+
+app = Flask(__name__)
+
+# ----------- WEATHER FETCH -----------
+
+def get_weather_data(location):
+    """Fetch weather data from wttr.in"""
+    url = f"https://wttr.in/{location}?format=j1"
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.json()
+
+# ----------- OLLAMA PARSING -----------
+
+def parse_question(question):
+    """Extract weather details from question using Ollama 3"""
+    prompt = (
+        "Extract location, time_period, and attribute from this question. "
+        "Return ONLY a JSON object with keys: location, time_period, attribute. "
+        "If not clear, assume today’s weather.\n\n"
+        f"Question: {question}\nJSON:"
+    )
+    try:
+        response = ollama.chat(model="llama3", messages=[{"role": "user", "content": prompt}])
+        return response["message"]["content"]
+    except Exception as e:
+        print(f"⚠️ Ollama Error: {e}")
+        return None
+
+def extract_json(text):
+    match = re.search(r"\{.*\}", text, re.DOTALL)
+    if match:
+        try:
+            return json.loads(match.group())
+        except json.JSONDecodeError:
+            pass
+    return None
+
+# ----------- OLLAMA HUMAN RESPONSE -----------
+
+def generate_ai_response(weather_data, question, location):
+    current = weather_data["current_condition"][0]
+    desc = current["weatherDesc"][0]["value"]
+    temp = current["temp_C"]
+    humidity = current["humidity"]
+    precip = current["precipMM"]
+
+    summary = (
+        f"In {location.title()}, it's currently {desc.lower()} with {temp}°C, "
+        f"humidity {humidity}%, and {precip} mm precipitation."
+    )
+
+    prompt = (
+        "You are a friendly weather assistant. "
+        "Based on the data and question, give a natural short response (1-2 lines). "
+        "If question mentions umbrella/raincoat, decide using precipitation info.\n\n"
+        f"Weather Data: {summary}\nUser Question: {question}\n\n"
+        "Examples:\n"
+        "- 'Yes, please take an umbrella — it looks rainy today.'\n"
+        "- 'No umbrella needed — skies are clear and sunny.'\n"
+        "- 'It’s cloudy but dry — you should be fine without a coat.'\n\n"
+        "Response:"
+    )
+
+    try:
+        response = ollama.chat(model="llama3", messages=[{"role": "user", "content": prompt}])
+        return response["message"]["content"].strip()
+    except Exception as e:
+        return f"Ollama Error: {e}"
+
+# ----------- MAIN ROUTE -----------
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+@app.route("/ask", methods=["POST"])
+def ask():
+    user_input = request.json.get("question", "")
+    parsed_text = parse_question(user_input)
+
+    if not parsed_text:
+        return jsonify({"response": "Sorry, I couldn’t understand your question."})
+
+    info = extract_json(parsed_text)
+    if not info:
+        return jsonify({"response": "Couldn’t extract valid info."})
+
+    location = info.get("location", "Perth").strip() or "Perth"
+    weather_data = get_weather_data(location)
+    ai_response = generate_ai_response(weather_data, user_input, location)
+
+    return jsonify({"response": ai_response})
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+💬 Step 2: templates/index.html
+
+Create a folder called templates/ and put this file inside it:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Weather Assistant</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="chat-container">
+    <h2>🌦️ AI Weather Assistant</h2>
+    <div id="chat-box"></div>
+    <div class="input-area">
+      <input type="text" id="user-input" placeholder="Ask about the weather...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
+
+
+🎨 Step 3: static/style.css
+
+Create a folder static/ and put this file inside it:
+
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom right, #87CEFA, #ffffff);
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat-container {
+  background: white;
+  width: 420px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  padding: 20px;
+}
+
+#chat-box {
+  height: 380px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.message {
+  margin: 8px 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+.user {
+  background: #DCF8C6;
+  align-self: flex-end;
+}
+
+.bot {
+  background: #EAEAEA;
+}
+
+.input-area {
+  display: flex;
+}
+
+input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-right: 8px;
+}
+
+button {
+  background: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+⚡ Step 4: static/script.js
+
+Add this inside the same static folder:
+
+async function sendMessage() {
+  const input = document.getElementById("user-input");
+  const chatBox = document.getElementById("chat-box");
+  const userMessage = input.value.trim();
+  if (!userMessage) return;
+
+  // Display user message
+  chatBox.innerHTML += `<div class="message user">🧑‍💬 ${userMessage}</div>`;
+  input.value = "";
+
+  // Send to backend
+  const response = await fetch("/ask", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({question: userMessage})
+  });
+  
+  const data = await response.json();
+  chatBox.innerHTML += `<div class="message bot">🤖 ${data.response}</div>`;
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+
+Run your Flask app:
+
+python app.py
+
+
+Open browser and go to 👉 http://127.0.0.1:5000
+
+💬 Example Output in Web Dashboard
+
+User: Do I need a raincoat today at Hyderabad?
+AI Assistant: Yes, please take an umbrella — light rain expected in Hyderabad today.
+
+User: Will it be sunny tomorrow in Perth?
+AI Assistant: It looks mostly sunny tomorrow with mild temperatures — no umbrella needed.
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+Me :
+-----
+
+we now have a chatbot which gives responses along with visualisation, which is good but I also need a tab 
+named weather dashboard which should be able to take location, what type of weather information 
+do we need and when ( today or forcast for next 3 days) and provide the necessary visualisation
+
+AI Response :
+---------------
+
+Perfect — you now want your app to have two tabs:
+
+1️⃣ Chatbot tab → where users can ask natural questions (your current chatbot).
+2️⃣ Weather Dashboard tab → where users manually enter:
+
+Location
+
+Type of weather info (temperature / precipitation / both)
+
+Time period (today / next 3 days)
+→ and get the appropriate visualizations.
+
+Below is your upgraded, fully working version 👇
+It’s still a Flask app, but now the HTML file includes a tabbed UI with both chatbot and dashboard in one page.
+
+🧠 app.py
+
+Save this as app.py.
+
+from flask import Flask, render_template, request, jsonify
+import requests, ollama, json, re
+
+app = Flask(__name__)
+
+# ---------------- WEATHER FETCH ---------------- #
+def get_weather_data(location):
+    try:
+        url = f"https://wttr.in/{location}?format=j1"
+        res = requests.get(url)
+        res.raise_for_status()
+        return res.json()
+    except Exception as e:
+        return {"error": str(e)}
+
+# ---------------- LLAMA3 AI PARSING ---------------- #
+def parse_question_with_ai(question):
+    prompt = (
+        "Extract weather details from this question. "
+        "Return ONLY a JSON object with keys: location, time_period, and attribute. "
+        "If missing, default to location='current city', time_period='today', attribute='weather'.\n\n"
+        f"Question: {question}\nJSON:"
+    )
+
+    try:
+        response = ollama.chat(model="llama3", messages=[{"role": "user", "content": prompt}])
+        return response["message"]["content"]
+    except Exception as e:
+        print(f"Ollama error: {e}")
+        return None
+
+def extract_json(text):
+    match = re.search(r"\{.*\}", text, re.DOTALL)
+    if match:
+        try:
+            return json.loads(match.group())
+        except:
+            pass
+    return None
+
+# ---------------- HUMANIZED AI RESPONSE ---------------- #
+def generate_human_response(weather_data, question, location):
+    if "error" in weather_data:
+        return weather_data["error"]
+
+    current = weather_data["current_condition"][0]
+    desc = current["weatherDesc"][0]["value"]
+    temp = current["temp_C"]
+    precip = current["precipMM"]
+    humidity = current["humidity"]
+
+    summary = (
+        f"In {location.title()}, it's currently {desc.lower()} with {temp}°C temperature, "
+        f"humidity {humidity}%, and {precip} mm precipitation."
+    )
+
+    prompt = (
+        "You are a friendly weather assistant. "
+        "Based on the data and the user question, answer in one human-like sentence. "
+        "If the question is about umbrella or raincoat, decide using precipitation. "
+        "Be short, clear, and conversational.\n\n"
+        f"Weather data: {summary}\n"
+        f"User question: {question}\n\n"
+        "Example: 'Yes, please take an umbrella — it might rain today.'\n"
+        "Now respond naturally:"
+    )
+
+    try:
+        response = ollama.chat(model="llama3", messages=[{"role": "user", "content": prompt}])
+        return response["message"]["content"].strip()
+    except Exception as e:
+        return f"Ollama error: {e}"
+
+# ---------------- ROUTES ---------------- #
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+@app.route("/ask", methods=["POST"])
+def ask():
+    data = request.get_json()
+    question = data.get("question", "")
+    parsed_text = parse_question_with_ai(question)
+
+    if not parsed_text:
+        return jsonify({"response": "Sorry, I couldn’t process your question."})
+
+    info = extract_json(parsed_text)
+    if not info:
+        return jsonify({"response": "Sorry, I couldn’t extract useful details."})
+
+    location = info.get("location", "Perth").strip() or "Perth"
+    weather_data = get_weather_data(location)
+    ai_response = generate_human_response(weather_data, question, location)
+
+    forecast = weather_data.get("weather", [])[:3]
+    dates = [day["date"] for day in forecast]
+    temps = [int(day["avgtempC"]) for day in forecast]
+    precips = [round(sum(float(h["precipMM"]) for h in day["hourly"]) / len(day["hourly"]), 2) for day in forecast]
+
+    return jsonify({
+        "response": ai_response,
+        "dates": dates,
+        "temps": temps,
+        "precips": precips
+    })
+
+@app.route("/dashboard", methods=["POST"])
+def dashboard():
+    data = request.get_json()
+    location = data.get("location", "Perth")
+    info_type = data.get("infoType", "both")
+    time_period = data.get("timePeriod", "today")
+
+    weather_data = get_weather_data(location)
+    if "error" in weather_data:
+        return jsonify({"error": weather_data["error"]})
+
+    if time_period.lower() == "today":
+        dates = [weather_data["weather"][0]["date"]]
+        temps = [int(weather_data["weather"][0]["avgtempC"])]
+        precips = [round(sum(float(h["precipMM"]) for h in weather_data["weather"][0]["hourly"]) / 8, 2)]
+    else:
+        forecast = weather_data["weather"][:3]
+        dates = [day["date"] for day in forecast]
+        temps = [int(day["avgtempC"]) for day in forecast]
+        precips = [round(sum(float(h["precipMM"]) for h in day["hourly"]) / len(day["hourly"]), 2) for day in forecast]
+
+    return jsonify({
+        "dates": dates,
+        "temps": temps if info_type in ["temperature", "both"] else [],
+        "precips": precips if info_type in ["precipitation", "both"] else []
+    })
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+🌤️ templates/index.html
+
+Save this in templates/index.html.
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🌦️ AI Weather Assistant</title>
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to bottom right, #89f7fe, #66a6ff);
+    margin: 0; padding: 0;
+    color: #333; text-align: center;
+}
+.container {
+    max-width: 800px; margin: 40px auto;
+    background: white; padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+.tabs {
+    display: flex; justify-content: center;
+    margin-bottom: 20px;
+}
+.tab {
+    padding: 12px 25px;
+    cursor: pointer;
+    background: #f4f4f4;
+    border-radius: 10px 10px 0 0;
+    margin: 0 5px;
+}
+.tab.active { background: white; font-weight: bold; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+input, select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #bbb;
+    margin: 5px;
+}
+button {
+    padding: 10px 18px;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+button:hover { background: #0056b3; }
+.response-box {
+    margin-top: 20px; font-size: 1.1em;
+    background: #f4f9ff; padding: 15px;
+    border-radius: 10px;
+}
+canvas { margin-top: 25px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌦️ AI Weather Platform</h1>
+
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('chatbot')">Chatbot</div>
+        <div class="tab" onclick="switchTab('dashboard')">Weather Dashboard</div>
+    </div>
+
+    <!-- Chatbot -->
+    <div id="chatbot" class="tab-content active">
+        <p>Ask something like “Do I need an umbrella today in Sydney?”</p>
+        <input id="question" placeholder="Type your weather question..." size="40">
+        <button onclick="askWeather()">Ask</button>
+        <div id="response" class="response-box"></div>
+        <canvas id="tempChart" width="600" height="300"></canvas>
+        <canvas id="precipChart" width="600" height="300"></canvas>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="tab-content">
+        <h3>Weather Dashboard</h3>
+        <input id="location" placeholder="Enter location">
+        <select id="infoType">
+            <option value="both">Both</option>
+            <option value="temperature">Temperature</option>
+            <option value="precipitation">Precipitation</option>
+        </select>
+        <select id="timePeriod">
+            <option value="today">Today</option>
+            <option value="3days">Next 3 Days</option>
+        </select>
+        <button onclick="getDashboardData()">Get Data</button>
+        <canvas id="dashTemp" width="600" height="300"></canvas>
+        <canvas id="dashPrecip" width="600" height="300"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+function switchTab(tab) {
+    document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    event.target.classList.add('active');
+}
+
+async function askWeather() {
+    const question = document.getElementById('question').value;
+    const resBox = document.getElementById('response');
+    resBox.innerHTML = "⏳ Thinking...";
+    const tempCanvas = document.getElementById('tempChart').getContext('2d');
+    const precipCanvas = document.getElementById('precipChart').getContext('2d');
+
+    const res = await fetch('/ask', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({question})
+    });
+    const data = await res.json();
+    resBox.innerHTML = "🤖 " + data.response;
+
+    drawCharts(tempCanvas, precipCanvas, data.dates, data.temps, data.precips);
+}
+
+async function getDashboardData() {
+    const location = document.getElementById('location').value || "Perth";
+    const infoType = document.getElementById('infoType').value;
+    const timePeriod = document.getElementById('timePeriod').value;
+
+    const res = await fetch('/dashboard', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({location, infoType, timePeriod})
+    });
+    const data = await res.json();
+
+    const ctxT = document.getElementById('dashTemp').getContext('2d');
+    const ctxP = document.getElementById('dashPrecip').getContext('2d');
+    drawCharts(ctxT, ctxP, data.dates, data.temps, data.precips);
+}
+
+function drawCharts(ctxTemp, ctxPrecip, dates, temps, precips) {
+    ctxTemp.clearRect(0, 0, 600, 300);
+    ctxPrecip.clearRect(0, 0, 600, 300);
+
+    if (temps.length) {
+        new Chart(ctxTemp, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Temperature (°C)',
+                    data: temps,
+                    borderColor: 'orange',
+                    backgroundColor: 'rgba(255,165,0,0.3)',
+                    fill: true
+                }]
+            },
+            options: {responsive: true, scales: {y: {beginAtZero: false}}}
+        });
+    }
+
+    if (precips.length) {
+        new Chart(ctxPrecip, {
+            type: 'bar',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Precipitation (mm)',
+                    data: precips,
+                    backgroundColor: 'rgba(0,123,255,0.5)',
+                    borderColor: '#007bff',
+                    borderWidth: 1
+                }]
+            },
+            options: {responsive: true, scales: {y: {beginAtZero: true}}}
+        });
+    }
+}
+</script>
+</body>
+</html>
+
+✅ Features:
+
+Two tabs:
+
+🌦️ Chatbot: Natural questions → AI responses + visual charts
+
+📊 Weather Dashboard: Manual input → direct visual data
+
+Inline CSS + JS (no external assets)
+
+Chart.js used for clean, modern visualization
