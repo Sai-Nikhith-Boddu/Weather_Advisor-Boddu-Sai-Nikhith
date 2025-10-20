@@ -3,14 +3,13 @@ weather_data.py
 ---------------
 Handles weather data operations for the AI Weather Assistant.
 Fetches live weather data, interprets user questions, and generates
-natural conversational responses via Ollama (LLaMA 3).
+natural conversational responses via Ollama (LLaMA 3.2).
 """
 
 import requests
 import json
 import ollama
 import re
-
 
 # ---------------- WEATHER DATA FETCH ---------------- #
 
@@ -31,7 +30,7 @@ def get_weather_data(location):
 def parse_question_with_ai(question):
     """
     Parse user's question to extract location, time, and attribute.
-    Uses Ollama to understand the query.
+    Uses Ollama LLaMA 3.2 to interpret the query.
     """
     prompt = (
         "Extract the location, time period, and weather attribute from the question below. "
@@ -41,8 +40,8 @@ def parse_question_with_ai(question):
     )
 
     try:
-        raw = ollama.chat(model="llama3:instruct", messages=[{"role": "user", "content": prompt}])
-        # Handle different Ollama return formats
+        raw = ollama.chat(model="llama3.2:1b", messages=[{"role": "user", "content": prompt}])
+        # Handle possible return formats
         if isinstance(raw, str):
             return raw
         if isinstance(raw, dict):
@@ -73,7 +72,7 @@ def extract_json(text):
 
 def generate_human_response(weather_data, question, location):
     """
-    Generate a short, conversational weather response using Ollama.
+    Generate a short, conversational weather response using Ollama LLaMA 3.2.
     Returns safe, human-like fallback if AI or data fails.
     """
     if not weather_data or "error" in weather_data:
@@ -110,12 +109,11 @@ def generate_human_response(weather_data, question, location):
             "Now write your response:"
         )
 
-        raw = ollama.chat(model="llama3", messages=[{"role": "user", "content": prompt}])
+        raw = ollama.chat(model="llama3.2:1b", messages=[{"role": "user", "content": prompt}])
 
-        # Debugging print — see what Ollama actually returned
         print("\n🔍 Raw Ollama output:\n", raw, "\n---------------------\n")
 
-        # Handle all possible formats
+        # Handle all possible formats of AI output
         if isinstance(raw, str):
             return raw.strip()
 
@@ -126,12 +124,11 @@ def generate_human_response(weather_data, question, location):
                 for msg in raw["messages"]:
                     if isinstance(msg, dict) and "content" in msg:
                         return msg["content"].strip()
-            # fallback: join any string values found
             for v in raw.values():
                 if isinstance(v, str) and v.strip():
                     return v.strip()
 
-        # last fallback
+        # Fallback response
         return "It seems to be a normal day — nothing unusual with the weather!"
 
     except Exception as e:
@@ -167,7 +164,7 @@ def prepare_visual_data(weather_data, time_period="today"):
 # ---------------- MAIN FUNCTION (LOCAL TEST) ---------------- #
 
 if __name__ == "__main__":
-    print("🌦️ Weather Assistant — Local Test Mode")
+    print("🌦️ Weather Assistant — Local Test Mode (LLaMA 3.2)")
     user_question = input("Ask something (e.g., Do I need an umbrella today in Sydney?): ")
 
     parsed = parse_question_with_ai(user_question)
