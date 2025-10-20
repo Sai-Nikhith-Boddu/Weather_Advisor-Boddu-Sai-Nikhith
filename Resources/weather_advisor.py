@@ -10,16 +10,16 @@ def get_weather_data(location):
     """Fetch weather data for a given location using wttr.in API."""
     try:
         url = f"https://wttr.in/{location}?format=j1"
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)
         response.raise_for_status()
         return response.json()
     except Exception as e:
         return {"error": f"Failed to fetch weather data: {e}"}
 
-# ---------------- PARSE QUESTION WITH OLLAMA3 ---------------- #
+# ---------------- PARSE QUESTION WITH LLAMA 3.2 ---------------- #
 
 def parse_question_with_ai(question):
-    """Use Ollama3 to extract structured info from user query."""
+    """Use LLaMA 3.2 to extract structured info from user query."""
     prompt = (
         "Extract weather details from the question below. "
         "Return ONLY a JSON object with keys: location, time_period, and attribute. "
@@ -28,7 +28,7 @@ def parse_question_with_ai(question):
     )
 
     try:
-        response = ollama.chat(model="llama3", messages=[{"role": "user", "content": prompt}])
+        response = ollama.chat(model="llama3.2:1b", messages=[{"role": "user", "content": prompt}])
         return response["message"]["content"]
     except Exception as e:
         print(f"⚠️ Error calling Ollama: {e}")
@@ -47,7 +47,7 @@ def extract_json(text):
 # ---------------- GENERATE HUMANIZED RESPONSE ---------------- #
 
 def generate_human_response(weather_data, question, location):
-    """Use Ollama3 to generate a human-like weather reply."""
+    """Use LLaMA 3.2 to generate a human-like weather reply."""
     if "error" in weather_data:
         return weather_data["error"]
 
@@ -77,7 +77,7 @@ def generate_human_response(weather_data, question, location):
     )
 
     try:
-        response = ollama.chat(model="llama3", messages=[{"role": "user", "content": prompt}])
+        response = ollama.chat(model="llama3.2:1b", messages=[{"role": "user", "content": prompt}])
         return response["message"]["content"].strip()
     except Exception as e:
         return f"⚠️ Ollama error: {e}"
@@ -86,38 +86,44 @@ def generate_human_response(weather_data, question, location):
 
 def visualize_temperature_forecast(weather_data, location):
     """Plot temperature forecast for next 3 days."""
-    days = weather_data["weather"][:3]
-    dates = [d["date"] for d in days]
-    avg_temps = [int(d["avgtempC"]) for d in days]
+    try:
+        days = weather_data["weather"][:3]
+        dates = [d["date"] for d in days]
+        avg_temps = [int(d["avgtempC"]) for d in days]
 
-    plt.figure(figsize=(6, 4))
-    plt.plot(dates, avg_temps, marker='o', color='orange', label='Avg Temperature (°C)')
-    plt.title(f"Temperature Forecast - {location.title()}")
-    plt.xlabel("Date")
-    plt.ylabel("Temperature (°C)")
-    plt.grid(True)
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
+        plt.figure(figsize=(6, 4))
+        plt.plot(dates, avg_temps, marker='o', color='orange', label='Avg Temperature (°C)')
+        plt.title(f"Temperature Forecast - {location.title()}")
+        plt.xlabel("Date")
+        plt.ylabel("Temperature (°C)")
+        plt.grid(True)
+        plt.legend()
+        plt.tight_layout()
+        plt.show()
+    except Exception as e:
+        print(f"⚠️ Visualization error: {e}")
 
 def visualize_precipitation_forecast(weather_data, location):
     """Plot precipitation forecast for next 3 days."""
-    days = weather_data["weather"][:3]
-    dates = [d["date"] for d in days]
-    avg_precip = []
+    try:
+        days = weather_data["weather"][:3]
+        dates = [d["date"] for d in days]
+        avg_precip = []
 
-    for day in days:
-        hourly = day["hourly"]
-        total_precip = sum(float(h["precipMM"]) for h in hourly)
-        avg_precip.append(round(total_precip / len(hourly), 2))
+        for day in days:
+            hourly = day["hourly"]
+            total_precip = sum(float(h["precipMM"]) for h in hourly)
+            avg_precip.append(round(total_precip / len(hourly), 2))
 
-    plt.figure(figsize=(6, 4))
-    plt.bar(dates, avg_precip, color='skyblue', edgecolor='black')
-    plt.title(f"Precipitation Forecast - {location.title()}")
-    plt.xlabel("Date")
-    plt.ylabel("Avg Precipitation (mm)")
-    plt.tight_layout()
-    plt.show()
+        plt.figure(figsize=(6, 4))
+        plt.bar(dates, avg_precip, color='skyblue', edgecolor='black')
+        plt.title(f"Precipitation Forecast - {location.title()}")
+        plt.xlabel("Date")
+        plt.ylabel("Avg Precipitation (mm)")
+        plt.tight_layout()
+        plt.show()
+    except Exception as e:
+        print(f"⚠️ Visualization error: {e}")
 
 # ---------------- MAIN FUNCTION ---------------- #
 
@@ -140,7 +146,7 @@ def get_weather_response(question):
 # ---------------- RUN THE ASSISTANT ---------------- #
 
 if __name__ == "__main__":
-    print("🌦️ Weather Assistant — powered by Ollama 3")
+    print("🌦️ Weather Assistant — powered by LLaMA 3.2")
     print("Type your question (e.g., 'Do I need a raincoat today in Hyderabad?')\n")
 
     while True:
@@ -163,4 +169,3 @@ if __name__ == "__main__":
                 visualize_precipitation_forecast(weather_data, weather_data["nearest_area"][0]["areaName"][0]["value"])
             else:
                 print("✅ Skipping visualization.\n")
-
