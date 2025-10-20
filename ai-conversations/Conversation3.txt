@@ -4,8 +4,8 @@ AI-Conversation
 Tool : ChatGPT
 Date : 20-10-2025
 
-Prompt:
---------
+My Prompt:
+-----------
 
 I want to build a simple AI-powered chatbot that answers weather-related user queries such as 'Do I need an umbrella today?' or 'Is it hot outside?'. Suggest logic or code that uses weather data to generate natural responses.
 
