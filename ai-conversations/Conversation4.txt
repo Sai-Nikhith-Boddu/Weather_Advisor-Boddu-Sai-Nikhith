@@ -4,8 +4,8 @@ AI-Conversations
 Tool : ChatGPT
 Date : 20-10-2025
 
-Prompt:
---------
+My Prompt:
+-----------
 
 When running my Flask weather app, I sometimes get requests.exceptions.ConnectionError or empty JSON responses. How can I handle these gracefully in Python and display user-friendly messages?
 
