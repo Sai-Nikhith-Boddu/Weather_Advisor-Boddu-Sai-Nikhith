@@ -26,7 +26,7 @@ def parse_question_with_ai(question):
         f"Question: {question}\nJSON:"
     )
     try:
-        response = ollama.chat(model="llama3", messages=[{"role": "user", "content": prompt}])
+        response = ollama.chat(model="llama3.2:1b", messages=[{"role": "user", "content": prompt}])
         return response["message"]["content"]
     except Exception as e:
         print(f"⚠️ Ollama parse error: {e}")
@@ -77,7 +77,7 @@ def generate_human_response(weather_data, question, location):
     )
 
     try:
-        response = ollama.chat(model="llama3", messages=[{"role": "user", "content": prompt}])
+        response = ollama.chat(model="llama3.2:1b", messages=[{"role": "user", "content": prompt}])
         return response["message"]["content"].strip()
     except Exception as e:
         return f"⚠️ Ollama error: {e}"
