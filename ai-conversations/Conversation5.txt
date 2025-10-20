@@ -1,4 +1,8 @@
+AI-Conversation:
+-----------------
 
+Tool : ChatGPT
+Date : 20-10-2025
 
 Prompt:
 -------
