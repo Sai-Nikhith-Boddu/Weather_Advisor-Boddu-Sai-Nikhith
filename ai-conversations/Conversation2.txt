@@ -4,8 +4,8 @@ AI-Conversations
 Date : 20-10-2025
 Tool : ChatGPT
 
-Prompt:
---------
+My Prompt:
+-----------
 
 Provide Python code to visualize weather temperature and humidity over 3 days using matplotlib. The chart should include labels, legends, and date on the x-axis.
 
