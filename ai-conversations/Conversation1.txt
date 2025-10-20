@@ -1,6 +1,9 @@
+AI-Conversations
+-----------------
+Date : 20-10-2025
+Tool : ChatGPT
 
-
-Prompt:
+My Prompt:
 ------
 Write a Python function to fetch weather data from the wttr.in API for a given city. It should parse temperature, humidity, wind speed, and precipitation, and return them in a structured JSON or dictionary format. Handle possible connection or parsing errors.
 
