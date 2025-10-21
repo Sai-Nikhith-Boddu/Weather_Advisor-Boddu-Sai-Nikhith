@@ -1,5 +1,6 @@
 AI-Conversation - UI Design
 ----------------------------
+1) 
 
 Tool : ChatGPT
 Date : 20-10-2025
@@ -34,3 +35,30 @@ After:
 Reflection:
 ------------
 This improved visual design, readability, and professional appearance.
+
+-----------------------------------------------------------------------------------------------------------------------
+
+AI - Conversation : AI Analysis
+--------------------------------
+2) 
+
+Tool: ChatGPT
+Date: 2025-10-21
+
+My Prompt :
+------------
+Please review my get_weather_data() function and suggest improvements in efficiency, readability, and error handling.
+
+AI Response:
+-------------
+
+-> Recommended adding timeout and retries
+
+-> Suggested extracting logic into helper functions
+
+-> Advised using logging instead of print() for debugging
+
+Reflection:
+------------
+
+Implements Code Review Practice — I critically accepted some suggestions while rejecting others, documenting why. This added professional review discipline to my workflow.
