@@ -1,5 +1,5 @@
-AI-Conversations
------------------
+AI-Conversation - Visualization
+--------------------------------
 
 Date : 20-10-2025
 Tool : ChatGPT
@@ -35,4 +35,4 @@ After (my version in `weather_advisor.py`):
 
 Reflection:
 ------------
-This improved the readability of data trends and user experience.
+This improved the readability of data trends and user experience. I learned to integrate data visualisation interactively.
