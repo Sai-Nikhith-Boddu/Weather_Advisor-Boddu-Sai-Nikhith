@@ -30,9 +30,9 @@ Only printed numerical values in the console — no graph.
 After (my version in `weather_advisor.py`):
 --------------------------------------------
 - Added `plt.figure(figsize=(8,4))`
-- Used `plt.twinx()` for dual y-axis
+- Used clear axis labels, legends, and colors
 - Integrated with Flask template to render chart images
 
 Reflection:
 ------------
-This improved the readability of data trends and user experience. I learned to integrate data visualisation interactively.
+This improved the readability of data trends and user experience. This prompt helped me to understand the transition from static console outputs to interactive, visual representation. I learned to integrate data visualisation interactively.
