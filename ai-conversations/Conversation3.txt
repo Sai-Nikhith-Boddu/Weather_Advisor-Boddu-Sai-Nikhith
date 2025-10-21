@@ -1,5 +1,5 @@
-AI-Conversation
-----------------
+AI-Conversation - Chatbot Logic
+--------------------------------
 
 Tool : ChatGPT
 Date : 20-10-2025
@@ -33,4 +33,4 @@ Dynamic rule-based system integrated in `llama_generate_response()`
 
 Reflection:
 ------------
-This made the chatbot more context-aware and conversational.
+This made the chatbot more context-aware and conversational. This uses persona-based prompting (“act as a friendly assistant”) and improved empathy and tone in responses.
