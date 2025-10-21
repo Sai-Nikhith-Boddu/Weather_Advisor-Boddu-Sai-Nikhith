@@ -1,5 +1,5 @@
-AI-Conversations
-----------------
+AI-Conversation - Error Handling
+---------------------------------
 
 Tool : ChatGPT
 Date : 20-10-2025
@@ -32,4 +32,4 @@ After:
 
 Reflection:
 ------------
-Improved stability and user experience under poor network conditions.
+Improved stability and user experience under poor network conditions.The code demonstrates error-driven development and focusing on “what if” situations and improving robustness.
