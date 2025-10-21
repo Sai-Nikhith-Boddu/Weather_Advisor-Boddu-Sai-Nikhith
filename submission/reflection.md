@@ -1,4 +1,4 @@
-# Reflection – AI Weather Advisor Project
+# Reflection – AI Weather Advisor Application
 
 The project is about developing a Weather Advisor Application. It combined software design, API integration, and user experience development. The project began with a simple idea on creating an app that provided weather forecasts, but evolved into a responsive, interactive platform that interprets user questions and displays real-time data through visual charts.
 
