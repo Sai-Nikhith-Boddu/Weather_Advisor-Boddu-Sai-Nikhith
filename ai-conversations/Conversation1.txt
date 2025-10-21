@@ -1,5 +1,6 @@
-AI-Conversations
------------------
+AI-Conversations - Data Fetching
+---------------------------------
+
 Date : 20-10-2025
 Tool : ChatGPT
 
@@ -39,4 +40,4 @@ After (final version in `weather_data.py`):
 
 Reflection:
 -----------
-This prompt helped me structure my data retrieval logic clearly and handle API errors gracefully.
+This prompt helped me structure my data retrieval logic clearly and handle API errors gracefully. I first defined the problem, then refined it through iterative AI guidance. It improved data accuracy and reliability.
