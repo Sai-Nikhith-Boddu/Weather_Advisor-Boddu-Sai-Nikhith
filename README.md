@@ -40,12 +40,12 @@ Weather_Advisor/
 ├── checklist.md
 └── requirements.txt
 
-▶️ Run the App
+## ▶️ Run the App
 python Resources/app.py
 Then open http://127.0.0.1:5000
  in your browser.
 
- 🧭 AI and Ethics
+ ## 🧭 AI and Ethics
 
 This project follows Michael Brock’s AI-Conversations Framework, emphasizing:
 
@@ -57,7 +57,7 @@ Ethical handling of user data (no storage or profiling)
 
 Clear distinction between human and AI-generated responses
 
-💬 Example Conversations
+## 💬 Example Conversations
 
 “Do I need an umbrella today in Perth?”
 
