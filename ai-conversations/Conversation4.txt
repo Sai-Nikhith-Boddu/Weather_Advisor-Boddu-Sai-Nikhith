@@ -27,9 +27,9 @@ App crashed with traceback on connection failure.
 After:
 ------
 - Wrapped API calls with `try-except`
-- Displayed messages with Flask `flash()`
-- Added fallback HTML (“Service Unavailable”) in `templates/error.html`
+- Returned clear JSON error messages
+- Displayed friendly responses in the chatbot UI instead of crashing
 
 Reflection:
 ------------
-Improved stability and user experience under poor network conditions.The code demonstrates error-driven development and focusing on “what if” situations and improving robustness.
+This made my app more stable and user-friendly. I learned to use structured error handling and communicate failures clearly through the frontend rather than letting backend exceptions stop execution.
