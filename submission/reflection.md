@@ -1,6 +1,6 @@
 # Reflection – AI Weather Advisor Application
 
-The project is about developing a Weather Advisor Application. It combined software design, API integration, and user experience development. The project began with a simple idea on creating an app that provided weather forecasts, but evolved into a responsive, interactive platform that interprets user questions and displays real-time data through visual charts.
+This project is about developing a Weather Advisor Application. It combined software design, API integration, and user experience development. The project began with a simple idea on creating an app that provided weather forecasts, but evolved into a responsive, interactive platform that interprets user questions and displays real-time data through visual charts.
 
 I explored AI models like Ollama for natural-language understanding and initially i used llama3 model and due to the memory issue I replaced llama3 with llama3.2:1b model which occupies less space and supported to obtain required output. This alternative achieved similar functionality by extracting keywords and city names directly from user questions. It demonstrated how structured logic and creativity can often replace heavy AI models without compromising usability or performance.
 
