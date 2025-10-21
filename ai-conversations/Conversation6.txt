@@ -1,0 +1,37 @@
+AI - Conversation : AI Testing
+-------------------------------
+
+Tool: ChatGPT
+Date: 2025-10-21
+
+My Prompt:
+-----------
+
+Generate 10 test cases to validate my weather chatbot. Include normal, edge, and invalid inputs.
+
+AI Response:
+-------------
+
+“Do I need an umbrella today?” → Expect yes/no
+
+“Is it hot in Dubai?” → Expect “yes, hot”
+
+“What’s the weather like in Paris?” → General description
+
+“Will it snow tomorrow in Sydney?” → Negative
+
+“How’s the temperature in Perth?” → Normal numeric
+
+“Rain forecast for next week?” → Out of range
+
+“Do I need a jacket tonight?” → Moderate response
+
+“Windy in Melbourne?” → Checks wind condition
+
+“Unknown city Xyzabc” → Handle gracefully
+
+Empty string → Return fallback message
+
+Reflection :
+-------------
+Covers AI-assisted testing — using AI to design structured test coverage. It made my chatbot more reliable and testable.
